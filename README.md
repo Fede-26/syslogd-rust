@@ -1,4 +1,4 @@
-# Syslod-rust
+# Syslog-rust
 
 This is a simple server for syslog.
 
@@ -26,6 +26,26 @@ If downloaded:
 sudo syslogd-rust --help
 ```
 
+## Log to file
+
+If you want to log to a file you can redirect the output or use a command like `tee`:
+
+```bash
+sudo syslogd-rust | tee -a log.txt
+```
+
+# Send a log message
+
+In linux you can use the `logger` command:
+
+```bash
+logger -is -n 127.0.0.1 this message is sent with udp
+```
+
+```bash
+logger -is --tcp -n 127.0.0.1 this message is sent with tcp
+```
+
 # "The Flow"
 
 Depending on the flag used, the port is bound and the process waits for connections.
@@ -41,11 +61,14 @@ As before it is passed to `print_message()`.
 
 Using the `--raw` flag you can see the original payload.
 
-For parsing command line arguments, [clap](https://crates.io/crates/clap) is used instead.
+[Clap](https://crates.io/crates/clap) is used for parsing command line arguments.
 
 I don't know why yet, but using tcp appends a `\n` to the end.
 This doesn't happen with udp.
 To make the outputs equal I trim the last character if it's a `\n` or `\r`.
+
+All the connections should stop after sending a single packet (both udp and tcp), because the tcp listener, in its current implementation (done by me) can't handle multiple reads on the same stream.
+This theoretically shouldn't be a problem.
 
 # External links
 

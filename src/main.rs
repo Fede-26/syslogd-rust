@@ -51,20 +51,20 @@ fn print_message(buf: &[u8], src_ip: SocketAddr, view_raw: bool) {
         println!("\n   RAW: {}\n", &buf_str);
     }
     println!("   source IP: {}", src_ip);
-    println!("   protocol:  {:?}", &message.protocol);
-    if let Some(timestamp) = &message.timestamp {
+    println!("   protocol:  {:?}", message.protocol);
+    if let Some(timestamp) = message.timestamp {
         println!("   timestamp: {}", timestamp);
     }
-    if let Some(severity) = &message.severity {
+    if let Some(severity) = message.severity {
         println!("   severity:  {}", severity.as_str());
     }
-    if let Some(facility) = &message.facility {
+    if let Some(facility) = message.facility {
         println!("   facility:  {}", facility.as_str());
     }
-    if let Some(appname) = &message.appname {
+    if let Some(appname) = message.appname {
         println!("   appname:   {}", appname);
     }
-    if let Some(pid) = &message.procid {
+    if let Some(pid) = message.procid {
         println!("   pid:       {}", pid);
     }
     if let Some(msgid) = message.msgid {
@@ -82,7 +82,7 @@ fn main() {
     if args.tcp {
         //listen on all interfaces
         let listener = TcpListener::bind(format!("127.0.0.1:{TCP_PORT}")).unwrap();
-        println!("Server running (TCP)...\n");
+        println!("Server running (TCP)...");
 
         for stream in listener.incoming() {
             match stream {
@@ -117,7 +117,7 @@ fn main() {
     } else {
         //open the socket on all interfaces
         let socket = UdpSocket::bind(format!("0.0.0.0:{UDP_PORT}")).unwrap();
-        println!("Server running (UDP)...\n");
+        println!("Server running (UDP)...");
 
         loop {
             // Receives a single datagram message on the socket. If `buf` is too small to hold
