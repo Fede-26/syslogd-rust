@@ -100,9 +100,10 @@ fn main() {
                             print_message(&buf, stream.peer_addr().unwrap(), args.raw);
                             stream.shutdown(Shutdown::Both).unwrap();
                         }
-                        Err(_) => {
+                        Err(e) => {
                             println!(
-                                "An error occurred, terminating connection with {}",
+                                "An error {} occurred, terminating connection with {}",
+                                e,
                                 stream.peer_addr().unwrap()
                             );
                             stream.shutdown(Shutdown::Both).unwrap();
