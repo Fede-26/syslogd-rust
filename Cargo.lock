@@ -370,14 +370,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rslogd-rust"
-version = "0.1.0"
-dependencies = [
- "clap",
- "syslog_loose",
-]
-
-[[package]]
 name = "rustix"
 version = "0.36.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -422,6 +414,14 @@ checksum = "97fb75f176928530867b2a659e470f9c9ff71904695bab6556f7ad30f9039efd"
 dependencies = [
  "chrono",
  "nom",
+]
+
+[[package]]
+name = "syslogd-rust"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "syslog_loose",
 ]
 
 [[package]]

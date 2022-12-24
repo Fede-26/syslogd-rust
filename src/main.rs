@@ -10,7 +10,7 @@ const TCP_PORT: u16 = 601; //TODO: verify if the port is right
 
 /// Simple server using syslog
 #[derive(Parser, Debug)]
-#[command(name = "rslogd-rust")]
+#[command(name = "syslogd-rust")]
 #[command(author = "Federico Zotti")]
 #[command(version = "1.1")]
 // #[command(about = "Simple server using syslog")]
