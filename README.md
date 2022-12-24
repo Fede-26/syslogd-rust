@@ -14,16 +14,6 @@ cargo build --release
 
 # Run
 
-It supports `--help`.
-
-## UDP
-
 ```bash
-sudo target/release/syslogd-rust
-```
-
-## TCP
-
-```bash
-sudo target/release/syslogd-rust --tcp
+sudo target/release/syslogd-rust --help
 ```

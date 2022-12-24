@@ -1,12 +1,12 @@
 use clap::Parser;
-use std::io::{Read};
+use std::io::Read;
 use std::net::{Shutdown, SocketAddr, TcpListener, UdpSocket};
 use syslog_loose::parse_message;
 
 //https://datatracker.ietf.org/doc/html/rfc5424#section-6
 
 const UDP_PORT: u16 = 514;
-const TCP_PORT: u16 = 601; //TODO: verify if the port is right
+const TCP_PORT: u16 = 601;
 
 /// Simple server using syslog
 #[derive(Parser, Debug)]
@@ -14,18 +14,24 @@ const TCP_PORT: u16 = 601; //TODO: verify if the port is right
 #[command(author = "Federico Zotti")]
 #[command(version = "1.1")]
 // #[command(about = "Simple server using syslog")]
-#[command(about = "This is a server that accept incoming syslog messages using tcp and udp.\nAll the messages should consist of only one packet.")]
+#[command(
+    about = "This is a server that accept incoming syslog messages using tcp and udp.\nAll the messages should consist of only one packet."
+)]
 #[command(long_about = None)]
 struct Args {
     /// Use the tcp protocol instead of udp
     #[arg(short, long)]
     tcp: bool,
+
+    /// View the raw message incoming
+    #[arg(short, long)]
+    raw: bool,
 }
 
 //remove trailing \n or \r from string
 fn trim_newline(s: &mut String) {
     //remove \0 from the tcp stream message
-    *s = s.chars().filter(|&char| {char != '\0'}).collect::<String>();
+    *s = s.chars().filter(|&char| char != '\0').collect::<String>();
     if s.ends_with('\n') {
         s.pop();
         if s.ends_with('\r') {
@@ -35,13 +41,15 @@ fn trim_newline(s: &mut String) {
 }
 
 //parse and print the message from the buffer
-fn print_message(buf: &[u8], src_ip: SocketAddr) {
+fn print_message(buf: &[u8], src_ip: SocketAddr, view_raw: bool) {
     let buf_str = String::from_utf8(buf.to_vec()).unwrap();
-    println!("\n\n?> {}", &buf_str);
 
     let message = parse_message(&buf_str);
 
-    println!("\n>> MESSAGE RECEIVED:");
+    println!("\n\n>> MESSAGE RECEIVED:");
+    if view_raw {
+        println!("\n   RAW: {}\n", &buf_str);
+    }
     println!("   source IP: {}", src_ip);
     println!("   protocol:  {:?}", &message.protocol);
     if let Some(timestamp) = &message.timestamp {
@@ -86,7 +94,7 @@ fn main() {
                     match stream.read(&mut buf) {
                         Ok(_size) => {
                             // only accept a single segment
-                            print_message(&buf, stream.peer_addr().unwrap());
+                            print_message(&buf, stream.peer_addr().unwrap(), args.raw);
                             stream.shutdown(Shutdown::Both).unwrap();
                         }
                         Err(_) => {
@@ -117,7 +125,7 @@ fn main() {
             let mut buf = [0; 2048];
             let (_amt, src) = socket.recv_from(&mut buf).unwrap();
 
-            print_message(&buf, src);
+            print_message(&buf, src, args.raw);
         }
     }
 }
