@@ -61,6 +61,9 @@ fn print_message(buf: &[u8], src_ip: SocketAddr, view_raw: bool) {
     if let Some(facility) = message.facility {
         println!("   facility:  {}", facility.as_str());
     }
+    if let Some(hostname) = message.hostname {
+        println!("   hostname:  {}", hostname);
+    }
     if let Some(appname) = message.appname {
         println!("   appname:   {}", appname);
     }
