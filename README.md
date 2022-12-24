@@ -12,10 +12,18 @@ It listens on all interfaces but can't use both protocols at the same time (you 
 cargo build --release
 ```
 
+If you don't want or can't build the executable, you can download it in the release tab.
+
 # Run
 
+If builded with cargo:
 ```bash
 sudo target/release/syslogd-rust --help
+```
+
+If downloaded:
+```bash
+sudo syslogd-rust --help
 ```
 
 # "The Flow"
